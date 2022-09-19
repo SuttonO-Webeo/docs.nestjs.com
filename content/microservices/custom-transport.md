@@ -103,6 +103,20 @@ Hello world!
 
 Which means that our method handler was properly executed.
 
+If youn are using a [interceptors](/interceptors) with your Custom Transport Strategy then you need to add the following code when calling the handler:
+
+```typescript
+async listen(callback: () => void) {
+  const streamOrResult = await this.mesageHandlers.get('echo');
+  // Allows interceptors to continue to flow of the call
+  if (isObservable(streamOrResult)) {
+    streamOrResult.subscribe();
+  }
+  console.log(streamOrResult);
+  callback();
+}
+```
+
 #### Client proxy
 
 As we mentioned in the first section, you don't necessarily need to use the `@nestjs/microservices` package to create microservices, but if you decide to do so and you need to integrate a custom strategy, you will need to provide a "client" class too.
